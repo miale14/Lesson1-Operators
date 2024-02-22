@@ -1,0 +1,89 @@
+import numpy as np
+
+# Original ASCII art of the human face
+original_face = """
+(*)   (*)
+    ^
+  ----
+"""
+original_face_pixels = [
+    [' ', '(', '*', ')', ' ', ' ', ' ', '(', '*', ')'],
+    [' ', ' ', ' ', ' ', ' ', '^', ' ', ' ', ' ', ' '],
+    [' ', ' ', '-', '-', '-', '-', '-', '-', ' ', ' ']
+]
+
+
+
+
+# Define rotation matrix for 90 degrees clockwise
+rotate_90_matrix = np.array([[0, 1],
+                              [-1, 0]])
+
+# Define rotation matrix for 180 degrees clockwise
+rotate_180_matrix = np.array([[-1, 0],
+                               [0, -1]])
+
+# Define flip horizontal matrix
+flip_horizontal_matrix = np.array([[-1, 0],
+                                   [0, 1]])
+
+# Define flip vertical matrix
+flip_vertical_matrix = np.array([[1, 0],
+                                 [0, -1]])
+
+def apply_transformation(matrix, original_pixels):
+    rows = len(original_pixels)
+    cols = len(original_pixels[0])
+
+    # Create a new matrix for transformed ASCII art
+    transformed_art = [[' ' for _ in range(cols)] for _ in range(rows)]
+
+    # Apply transformation to each pixel of the original ASCII art
+    for i in range(rows):
+        for j in range(cols):
+            # Apply matrix transformation
+            x, y = np.dot(matrix, [i - rows//2, j - cols//2]) + np.array([rows//2, cols//2])
+            x = int(round(x))  # Round x to the nearest integer
+            y = int(round(y))  # Round y to the nearest integer
+            # Check if the transformed coordinates are within the bounds
+            if 0 <= x < rows and 0 <= y < cols:
+                transformed_art[x][y] = original_pixels[i][j]
+
+    # Convert transformed art back to string
+    transformed_art_str = '\n'.join([''.join(row) for row in transformed_art])
+    return transformed_art_str
+
+# Test the function
+rotated_90 = apply_transformation(rotate_90_matrix, original_face_pixels)
+rotated_180 = apply_transformation(rotate_180_matrix, original_face_pixels)
+flipped_horizontal = apply_transformation(flip_horizontal_matrix, original_face_pixels)
+flipped_vertical = apply_transformation(flip_vertical_matrix, original_face_pixels)
+
+# Display the transformed faces
+print("Original Face:")
+for row in original_face_pixels:
+    print(''.join(row))
+print("\nRotated 90 Degrees:")
+print(rotated_90)
+print("\nRotated 180 Degrees:")
+print(rotated_180)
+print("\nFlipped Horizontal:")
+print(flipped_horizontal)
+print("\nFlipped Vertical:")
+print(flipped_vertical)
+
+
+
+
+
+# Display the transformed faces
+print("Original Face:")
+print(original_face)
+print("\nRotated 90 Degrees:")
+print(rotated_90)
+print("\nRotated 180 Degrees:")
+print(rotated_180)
+print("\nFlipped Horizontal:")
+print(flipped_horizontal)
+print("\nFlipped Vertical:")
+print(flipped_vertical)
